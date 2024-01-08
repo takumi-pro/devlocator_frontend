@@ -1,0 +1,11 @@
+{
+  // ファイル保存時に自動的にeslintの問題を修正
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  // ファイル保存時に自動的にフォーマット
+  "editor.formatOnSave": true,
+  // デフォルトフォーマッターをprettierに設定
+  "editor.defaultFormatter": "esbenp.prettier-vscode" 
+}
