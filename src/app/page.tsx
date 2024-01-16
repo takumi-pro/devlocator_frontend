@@ -1,15 +1,17 @@
-"use client";
-
-import { signIn, signOut } from "next-auth/react";
+import { Signin } from "@/ui/Signin";
+import { Signout } from "@/ui/Signout";
+import { getSession } from "@/utils/session";
 
 /**
  * Home
  */
-const Home = () => {
+const Home = async () => {
+  const session = await getSession();
   return (
     <main>
-      <button onClick={() => signIn()}>Sign in</button>
-      <button onClick={() => signOut()}>Sign out</button>
+      {session && <Signout />}
+      {!session && <Signin />}
+      <p>{session ? session.user?.name : "名前はまだない"}</p>
     </main>
   );
 };
