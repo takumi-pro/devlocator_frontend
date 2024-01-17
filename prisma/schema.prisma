@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Account {
+  userId            String   @unique(map: "uk_account_userid") @db.VarChar(255) @default(cuid())
+  type              String   @db.VarChar(255)
+  provider          String   @db.VarChar(255)
+  providerAccountId String   @db.VarChar(255)
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?  @db.VarChar(255)
+  scope             String?  @db.VarChar(255)
+  id_token          String?  @db.Text
+  session_state     String?  @db.VarChar(255)
+  created_at        DateTime @default(now()) @db.DateTime(6)
+  updated_at        DateTime @default(now()) @db.DateTime(6)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([provider, providerAccountId])
+  @@index([userId], map: "idx_account_01")
+  @@map("accounts")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model bookmarked_events {
+  event_id           Int       @id
+  title              String    @db.VarChar(255)
+  catch              String?   @db.VarChar(255)
+  description        String?   @db.Text
+  event_url          String?   @db.VarChar(255)
+  started_at         DateTime? @db.DateTime(0)
+  ended_at           DateTime? @db.DateTime(0)
+  limit              Int?
+  hash_tag           String?   @db.VarChar(100)
+  event_type         String?   @db.VarChar(50)
+  accepted           Int?
+  waiting            Int?
+  updated_at         DateTime? @db.DateTime(0)
+  owner_id           Int?
+  owner_nickname     String?   @db.VarChar(255)
+  owner_display_name String?   @db.VarChar(255)
+  place              String?   @db.VarChar(255)
+  address            String?   @db.VarChar(255)
+  lat                String    @db.VarChar(255)
+  lon                String    @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model bookmarks {
+  event_id Int
+  user_id  Int
+
+  @@id([event_id, user_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model events {
+  event_id           Int       @id
+  title              String    @db.VarChar(255)
+  catch              String?   @db.VarChar(255)
+  description        String?   @db.Text
+  event_url          String?   @db.VarChar(255)
+  started_at         DateTime? @db.DateTime(0)
+  ended_at           DateTime? @db.DateTime(0)
+  limit              Int?
+  hash_tag           String?   @db.VarChar(100)
+  event_type         String?   @db.VarChar(50)
+  accepted           Int?
+  waiting            Int?
+  updated_at         DateTime? @db.DateTime(0)
+  owner_id           Int?
+  owner_nickname     String?   @db.VarChar(255)
+  owner_display_name String?   @db.VarChar(255)
+  place              String?   @db.VarChar(255)
+  address            String?   @db.VarChar(255)
+  lat                String    @db.VarChar(255)
+  lon                String    @db.VarChar(255)
+}
+
+model gorp_migrations {
+  id         String    @id @db.VarChar(255)
+  applied_at DateTime? @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Session {
+  sessionToken String   @id @db.VarChar(255) @default(cuid())
+  userId       String   @unique(map: "uk_session_userid") @db.VarChar(255)
+  expires      DateTime @db.Timestamp(0)
+  created_at   DateTime @default(now()) @db.DateTime(6)
+  updated_at   DateTime @default(now()) @db.DateTime(6)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "idx_session_01")
+  @@map("sessions")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model User {
+  id            String    @id @db.VarChar(255) @default(cuid())
+  name          String?   @db.VarChar(255)
+  email         String    @unique(map: "uk_email") @db.VarChar(255)
+  emailVerified DateTime? @db.DateTime(6)
+  image         String?   @db.VarChar(255)
+  created_at    DateTime? @db.Timestamp(0)
+  updated_at    DateTime? @db.Timestamp(0)
+
+  accounts Account[]
+  sessions Session[]
+
+  @@map("users")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model verificationtokens {
+  identifier String   @db.VarChar(255)
+  token      String   @db.VarChar(255)
+  expires    DateTime @db.Timestamp(0)
+
+  @@id([identifier, token])
+}
