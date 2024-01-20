@@ -3,6 +3,7 @@ module.exports = {
   parserOptions: {
     project: "./tsconfig.json",
   },
+  ignorePatterns: ["./next*", "**/*.js", "**/*.cjs", "package-lock.json"],
   plugins: [
     "@typescript-eslint/eslint-plugin",
     "tailwindcss",
@@ -38,9 +39,9 @@ module.exports = {
       "error",
       {
         groups: ["builtin", "external", "internal"],
-        alphabetize: {
-          order: "asc",
-        },
+        // alphabetize: {
+        //   order: "asc",
+        // },
         "newlines-between": "always",
       },
     ],
