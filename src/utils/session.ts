@@ -1,3 +1,5 @@
+import "server-only";
+
 import { Session, getServerSession } from "next-auth";
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
