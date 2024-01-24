@@ -1,7 +1,7 @@
-"use client";
-
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
+
+import { Filter } from "@/ui/filter/Filter";
 
 /**
  * Home
@@ -9,13 +9,14 @@ import { useMemo } from "react";
 const Home = () => {
   const Map = useMemo(
     () =>
-      dynamic(() => import("../ui/Map/Map").then((module) => module.Map), {
+      dynamic(() => import("@/ui/map/Map").then((module) => module), {
         ssr: false,
       }),
     []
   );
+
   return (
-    <main>
+    <main className="relative">
       <Map />
       {/* TODO: uiに切り出す */}
       <div
@@ -26,10 +27,11 @@ const Home = () => {
           zIndex: "1",
           opacity: ".7",
           position: "absolute",
-          top: "56px",
+          top: "0px",
           right: "0px",
         }}
       />
+      <Filter />
     </main>
   );
 };

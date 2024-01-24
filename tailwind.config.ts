@@ -18,14 +18,33 @@ const config = {
       },
     },
     extend: {
+      width: {
+        "lg-dialog": "560px",
+      },
+      maxWidth: {
+        "lg-dialog": "560px",
+      },
+      maxHeight: {
+        "lg-dialog": "700px",
+        category: "350px",
+      },
       colors: {
+        grad: {
+          "main-from": "#273ce2",
+          "main-from-50": "#015ed1",
+          "main-to": "#126ff4",
+        },
         custom: {
           "c-gray-200": "#f1f5f9",
           "c-gray-500": "#d6e3ed",
           "hover-white": "#f5fbff",
           sub: "#eee",
+          "hover-sub": "#cfcfcf",
           icon: "#8f9faa",
           main: "#3EA8FF",
+          "main-hover": "#0f83fd",
+          fontcolor: "#333",
+          primary: "#1F4D45",
         },
         sub: "#eee",
         border: "hsl(var(--border))",
