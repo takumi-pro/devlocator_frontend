@@ -10,6 +10,9 @@ const config = {
   ],
   prefix: "",
   theme: {
+    screens: {
+      tablet: "900px",
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -18,14 +21,43 @@ const config = {
       },
     },
     extend: {
+      width: {
+        sidebar: "424px",
+        "md-sidebar": "350px",
+        "lg-dialog": "560px",
+      },
+      height: {
+        sidebar: "calc(100vh - 56px)",
+        "sidebar-content": "calc(100vh - 56px - 120px)",
+      },
+      maxWidth: {
+        "lg-dialog": "560px",
+      },
+      maxHeight: {
+        "lg-dialog": "700px",
+        category: "350px",
+      },
       colors: {
+        sidebar: "rgba(255, 255, 255, .7)",
+        "bookmark-primary": "#00A4C9",
+        grad: {
+          "main-from": "#00A4C9",
+          "main-from-50": "#006EA6",
+          "main-to": "#0E5781",
+        },
         custom: {
           "c-gray-200": "#f1f5f9",
           "c-gray-500": "#d6e3ed",
           "hover-white": "#f5fbff",
           sub: "#eee",
+          "hover-sub": "#cfcfcf",
           icon: "#8f9faa",
           main: "#3EA8FF",
+          secondary: "#0785ED",
+          "gray-7070": "#707070",
+          "main-hover": "#0f83fd",
+          fontcolor: "#333",
+          primary: "#1F4D45",
         },
         sub: "#eee",
         border: "hsl(var(--border))",

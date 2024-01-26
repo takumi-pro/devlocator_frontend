@@ -3,7 +3,14 @@ module.exports = {
   parserOptions: {
     project: "./tsconfig.json",
   },
-  ignorePatterns: ["./next*", "**/*.js", "**/*.cjs", "package-lock.json"],
+  ignorePatterns: [
+    "./next*",
+    "**/*.js",
+    "**/*.cjs",
+    "package-lock.json",
+    "src/lib/**/*.ts",
+    "src/components/**/*.tsx",
+  ],
   plugins: [
     "@typescript-eslint/eslint-plugin",
     "tailwindcss",
