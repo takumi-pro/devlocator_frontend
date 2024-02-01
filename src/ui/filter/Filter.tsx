@@ -121,7 +121,7 @@ export const Filter = () => {
 
   return (
     <>
-      <div className="absolute left-6 top-6 z-10">
+      <div className="absolute left-6 top-3 z-10">
         {/* TODO: ボタンはuiに切り出す */}
         <div
           onClick={() => setOpen((prev) => !prev)}
