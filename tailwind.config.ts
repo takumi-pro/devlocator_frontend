@@ -12,6 +12,7 @@ const config = {
   theme: {
     screens: {
       tablet: "900px",
+      mobile: "830px",
     },
     container: {
       center: true,
@@ -20,10 +21,14 @@ const config = {
         "2xl": "1400px",
       },
     },
+    translate: {
+      sidebar: "424px",
+      "sidebar-small": "390px",
+    },
     extend: {
       width: {
         sidebar: "424px",
-        "md-sidebar": "350px",
+        "sidebar-small": "390px",
         "lg-dialog": "560px",
       },
       height: {
@@ -37,8 +42,11 @@ const config = {
         "lg-dialog": "700px",
         category: "350px",
       },
+      minHeight: {
+        "sidebar-content": "calc(100vh - 56px - 120px)",
+      },
       colors: {
-        sidebar: "rgba(255, 255, 255, .7)",
+        sidebar: "rgba(255, 255, 255, .75)",
         "bookmark-primary": "#00A4C9",
         grad: {
           "main-from": "#00A4C9",

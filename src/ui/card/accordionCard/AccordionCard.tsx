@@ -19,12 +19,18 @@ type Props = {
     limit: number;
     current: number;
   };
+  isBorder?: boolean;
+  isShadow?: boolean;
 };
 
 /**
  * イベント情報を表示するカード
  */
-export const AccordionCard = ({ event }: Props) => {
+export const AccordionCard = ({
+  event,
+  isBorder = false,
+  isShadow = true,
+}: Props) => {
   // const accordionRef = useRef<HTMLDivElement>(null);
   // const doggleAccordion = () => {
   //   if (accordionRef.current) {
@@ -39,7 +45,11 @@ export const AccordionCard = ({ event }: Props) => {
   //   }
   // }
   return (
-    <Card className="relative">
+    <Card
+      className={`${isBorder && "border border-custom-sub"} ${
+        isShadow && "shadow-lg"
+      } relative`}
+    >
       <AccordionItem value={`item-${event.id.toString()}`}>
         <AccordionTrigger>
           <div className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-bookmark-primary bg-transparent">
