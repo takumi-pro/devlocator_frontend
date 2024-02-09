@@ -35,12 +35,25 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
+type SearchDataType = {
+  keyword: string;
+  date: string;
+  prefecture: string;
+  category: string[];
+};
+
 /**
  * 絞り込みボタン
  * クリックすると絞り込みダイアログが表示される
  */
 export const Filter = () => {
   const [open, setOpen] = useState(false);
+  const [searchData, setSearchData] = useState<SearchDataType>({
+    keyword: "",
+    date: "",
+    prefecture: "",
+    category: [],
+  });
 
   const FormSchema = z.object({
     category: z.array(z.string()),
@@ -66,18 +79,13 @@ export const Filter = () => {
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     console.log(data);
+    const dateString = `${data.date.from.toDateString()} - ${data.date.to?.toDateString()}`;
+    setSearchData({ ...data, date: dateString });
   };
 
   const checkRef = useRef<HTMLButtonElement>(null);
 
-  // const uncheck = () => {
-  //   if (!checkRef.current) return;
-  //   const isChecked = checkRef.current.ariaChecked === "true" ? true : false;
-  //   checkRef.current.ariaChecked = String(!isChecked);
-  //   const clickedDataState = isChecked ? "unchecked" : "checked";
-  //   checkRef.current.setAttribute("data-state", clickedDataState);
-  // };
-
+  // TODO: 別ファイルで管理
   // イベント内容
   const eventContents = [
     { id: "mokumoku", label: "もくもく会" },
@@ -128,7 +136,10 @@ export const Filter = () => {
           className="flex cursor-pointer items-center justify-between rounded-md border border-sub bg-white px-4 py-2 text-sm font-medium text-custom-fontcolor transition-all hover:bg-custom-sub focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
         >
           <MdOutlineFilterAlt className="mr-2 text-lg text-custom-main" />
-          <span>絞り込み</span>
+          <span>
+            絞り込み {searchData.category} {searchData.date}{" "}
+            {searchData.keyword}
+          </span>
         </div>
       </div>
 
@@ -411,6 +422,7 @@ export const Filter = () => {
                             閉じる
                           </div>
                           <Button
+                            onClick={() => setOpen(false)}
                             className="w-20 bg-custom-main drop-shadow-lg hover:bg-custom-main-hover"
                             type="submit"
                           >
