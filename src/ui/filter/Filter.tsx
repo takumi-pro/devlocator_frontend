@@ -3,12 +3,13 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Fragment, useRef, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoCalendarOutline } from "react-icons/io5";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import * as z from "zod";
 
+import { Event, EventResponse } from "@/api/events/type";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -42,11 +43,16 @@ type SearchDataType = {
   category: string[];
 };
 
+type Props = {
+  events: Event[];
+  setEventData: Dispatch<SetStateAction<EventResponse>>;
+};
+
 /**
  * 絞り込みボタン
  * クリックすると絞り込みダイアログが表示される
  */
-export const Filter = () => {
+export const Filter = ({ events, setEventData }: Props) => {
   const [open, setOpen] = useState(false);
   const [searchData, setSearchData] = useState<SearchDataType>({
     keyword: "",
@@ -78,9 +84,9 @@ export const Filter = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
     const dateString = `${data.date.from.toDateString()} - ${data.date.to?.toDateString()}`;
     setSearchData({ ...data, date: dateString });
+    setEventData({ events, resultsReturned: 10 });
   };
 
   const checkRef = useRef<HTMLButtonElement>(null);

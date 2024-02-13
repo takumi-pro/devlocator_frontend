@@ -3,57 +3,64 @@
 import { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
+import { Event } from "@/api/events/type";
 import { Accordion } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AccordionCard } from "@/ui/card";
 
-const events = [
-  {
-    id: 1,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 2,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 3,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 4,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 5,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-];
+// const events = [
+//   {
+//     id: 1,
+//     title: "新宿ミートアップ#4",
+//     date: "2023/12/16（土）12:00~13:00",
+//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
+//     limit: 60,
+//     current: 50,
+//   },
+//   {
+//     id: 2,
+//     title: "新宿ミートアップ#4",
+//     date: "2023/12/16（土）12:00~13:00",
+//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
+//     limit: 60,
+//     current: 50,
+//   },
+//   {
+//     id: 3,
+//     title: "新宿ミートアップ#4",
+//     date: "2023/12/16（土）12:00~13:00",
+//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
+//     limit: 60,
+//     current: 50,
+//   },
+//   {
+//     id: 4,
+//     title: "新宿ミートアップ#4",
+//     date: "2023/12/16（土）12:00~13:00",
+//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
+//     limit: 60,
+//     current: 50,
+//   },
+//   {
+//     id: 5,
+//     title: "新宿ミートアップ#4",
+//     date: "2023/12/16（土）12:00~13:00",
+//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
+//     limit: 60,
+//     current: 50,
+//   },
+// ];
+
+type Props = {
+  events: Event[];
+  resultReturned: number;
+};
 
 /**
  * イベント情報を表示するサイドバー
  */
-export const Sidebar = () => {
+export const Sidebar = ({ events, resultReturned }: Props) => {
+  const lessThan = 100;
   const [open, setOpen] = useState(true);
   return (
     <div
@@ -75,7 +82,9 @@ export const Sidebar = () => {
         <TabsContent value="all">
           {/* TODO: UIに切り出す */}
           <div className="mt-6 text-sm text-slate-500">
-            <span className="mr-1 font-bold text-custom-fontcolor">99</span>
+            <span className="mr-1 font-bold text-custom-fontcolor">
+              {resultReturned}
+            </span>
             件表示されています
           </div>
           <Accordion
@@ -83,9 +92,11 @@ export const Sidebar = () => {
             type="single"
             collapsible
           >
-            {events.map((event) => (
-              <AccordionCard key={event.id} event={event} />
-            ))}
+            {events &&
+              events.length <= lessThan &&
+              events.map((event) => (
+                <AccordionCard key={event.eventId} event={event} />
+              ))}
           </Accordion>
         </TabsContent>
         <TabsContent value="bookmark">bookmark events</TabsContent>

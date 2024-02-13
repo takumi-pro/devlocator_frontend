@@ -3,6 +3,7 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { LiaMapMarkerAltSolid } from "react-icons/lia";
 import { VscLinkExternal } from "react-icons/vsc";
 
+import { Event } from "@/api/events/type";
 import {
   AccordionContent,
   AccordionItem,
@@ -11,14 +12,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
-  event: {
-    id: number;
-    title: string;
-    date: string;
-    address: string;
-    limit: number;
-    current: number;
-  };
+  event: Event;
   isBorder?: boolean;
   isShadow?: boolean;
 };
@@ -50,7 +44,7 @@ export const AccordionCard = ({
         isShadow && "shadow-lg"
       } relative`}
     >
-      <AccordionItem value={`item-${event.id.toString()}`}>
+      <AccordionItem value={`item-${event.eventId.toString()}`}>
         <AccordionTrigger>
           <div className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-bookmark-primary bg-transparent">
             <FaRegBookmark className="text-lg text-bookmark-primary" />
@@ -62,7 +56,7 @@ export const AccordionCard = ({
             <div className="flex flex-col gap-y-1.5">
               <div className="flex items-center justify-start gap-2 text-sm text-custom-gray-7070">
                 <IoCalendarOutline className="text-lg" />
-                {event.date}
+                {event.startedAt}
               </div>
               <div className="flex items-center justify-start gap-2 text-sm text-custom-gray-7070">
                 <LiaMapMarkerAltSolid className="text-2xl" />
@@ -70,7 +64,7 @@ export const AccordionCard = ({
               </div>
               <div className="flex items-center justify-start gap-2 text-sm text-custom-gray-7070">
                 <FaRegUser />
-                {event.current}/{event.limit}
+                {event.waiting}/{event.limit}
               </div>
             </div>
           </CardContent>
