@@ -8,58 +8,16 @@ import { Accordion } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AccordionCard } from "@/ui/card";
 
-// const events = [
-//   {
-//     id: 1,
-//     title: "新宿ミートアップ#4",
-//     date: "2023/12/16（土）12:00~13:00",
-//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-//     limit: 60,
-//     current: 50,
-//   },
-//   {
-//     id: 2,
-//     title: "新宿ミートアップ#4",
-//     date: "2023/12/16（土）12:00~13:00",
-//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-//     limit: 60,
-//     current: 50,
-//   },
-//   {
-//     id: 3,
-//     title: "新宿ミートアップ#4",
-//     date: "2023/12/16（土）12:00~13:00",
-//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-//     limit: 60,
-//     current: 50,
-//   },
-//   {
-//     id: 4,
-//     title: "新宿ミートアップ#4",
-//     date: "2023/12/16（土）12:00~13:00",
-//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-//     limit: 60,
-//     current: 50,
-//   },
-//   {
-//     id: 5,
-//     title: "新宿ミートアップ#4",
-//     date: "2023/12/16（土）12:00~13:00",
-//     address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-//     limit: 60,
-//     current: 50,
-//   },
-// ];
-
 type Props = {
   events: Event[];
   resultReturned: number;
+  eventDetail?: Event;
 };
 
 /**
  * イベント情報を表示するサイドバー
  */
-export const Sidebar = ({ events, resultReturned }: Props) => {
+export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
   const lessThan = 100;
   const [open, setOpen] = useState(true);
   return (
@@ -97,6 +55,9 @@ export const Sidebar = ({ events, resultReturned }: Props) => {
               events.map((event) => (
                 <AccordionCard key={event.eventId} event={event} />
               ))}
+            {eventDetail && (
+              <AccordionCard key={eventDetail.eventId} event={eventDetail} />
+            )}
           </Accordion>
         </TabsContent>
         <TabsContent value="bookmark">bookmark events</TabsContent>

@@ -4,6 +4,7 @@ import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
+import { Dispatch, SetStateAction } from "react";
 import {
   AttributionControl,
   MapContainer,
@@ -21,10 +22,15 @@ const markerIcon = L.icon({
   shadowUrl: iconShadow.src,
 });
 
+type Props = {
+  events: Event[];
+  setEventDetail: Dispatch<SetStateAction<Event | undefined>>;
+};
+
 /**
  * Leafletで地図を表示する
  */
-const MapView = ({ events }: { events: Event[] }) => {
+const MapView = ({ events, setEventDetail }: Props) => {
   const lat = 139.7668576;
   const lon = 35.6810436;
 
@@ -57,9 +63,21 @@ const MapView = ({ events }: { events: Event[] }) => {
               key={event.eventId}
               icon={markerIcon}
               position={[Number(event.lat), Number(event.lon)]}
+              eventHandlers={{
+                click: () => setEventDetail(event),
+              }}
             >
-              <Popup>test</Popup>
+              <Popup>
+                {event.address}
+                <br />
+                {event.place}
+              </Popup>
             </Marker>
+            // <ClickMarker
+            //   key={event.eventId}
+            //   event={event}
+            //   setEventDetail={setEventDetail}
+            // />
           ))}
       </MaekerClusterGroup>
     </MapContainer>

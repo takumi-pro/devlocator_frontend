@@ -1,18 +1,19 @@
 import "leaflet/dist/leaflet.css";
 
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 
 import { Event } from "@/api/events/type";
 
 type Props = {
   events: Event[];
+  setEventDetail: Dispatch<SetStateAction<Event | undefined>>;
 };
 
 /**
  * Leafletで地図を表示する
  */
-const Map = ({ events }: Props) => {
+const Map = ({ events, setEventDetail }: Props) => {
   const MapView = useMemo(
     () =>
       dynamic(
@@ -27,7 +28,7 @@ const Map = ({ events }: Props) => {
     []
   );
 
-  return <MapView events={events} />;
+  return <MapView events={events} setEventDetail={setEventDetail} />;
 };
 
 export default Map;
