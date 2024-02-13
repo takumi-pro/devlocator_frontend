@@ -24,13 +24,14 @@ const markerIcon = L.icon({
 
 type Props = {
   events: Event[];
+  eventDetail?: Event;
   setEventDetail: Dispatch<SetStateAction<Event | undefined>>;
 };
 
 /**
  * Leafletで地図を表示する
  */
-const MapView = ({ events, setEventDetail }: Props) => {
+const MapView = ({ events, setEventDetail, eventDetail }: Props) => {
   const lat = 139.7668576;
   const lon = 35.6810436;
 
@@ -64,7 +65,13 @@ const MapView = ({ events, setEventDetail }: Props) => {
               icon={markerIcon}
               position={[Number(event.lat), Number(event.lon)]}
               eventHandlers={{
-                click: () => setEventDetail(event),
+                click: () => {
+                  if (eventDetail && eventDetail.eventId == event.eventId) {
+                    setEventDetail(undefined);
+                  } else {
+                    setEventDetail(event);
+                  }
+                },
               }}
             >
               <Popup>

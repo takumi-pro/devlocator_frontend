@@ -7,13 +7,14 @@ import { Event } from "@/api/events/type";
 
 type Props = {
   events: Event[];
+  eventDetail?: Event;
   setEventDetail: Dispatch<SetStateAction<Event | undefined>>;
 };
 
 /**
  * Leafletで地図を表示する
  */
-const Map = ({ events, setEventDetail }: Props) => {
+const Map = ({ events, setEventDetail, eventDetail }: Props) => {
   const MapView = useMemo(
     () =>
       dynamic(
@@ -28,7 +29,13 @@ const Map = ({ events, setEventDetail }: Props) => {
     []
   );
 
-  return <MapView events={events} setEventDetail={setEventDetail} />;
+  return (
+    <MapView
+      events={events}
+      eventDetail={eventDetail}
+      setEventDetail={setEventDetail}
+    />
+  );
 };
 
 export default Map;

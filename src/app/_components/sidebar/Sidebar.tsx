@@ -43,20 +43,25 @@ export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
             <span className="mr-1 font-bold text-custom-fontcolor">
               {resultReturned}
             </span>
-            件表示されています
+            件がマップに表示されています
           </div>
           <Accordion
             className="mt-3 flex h-sidebar-content flex-col gap-y-3 overflow-scroll"
             type="single"
             collapsible
           >
+            {eventDetail && (
+              <AccordionCard key={eventDetail.eventId} event={eventDetail} />
+            )}
             {events &&
               events.length <= lessThan &&
               events.map((event) => (
                 <AccordionCard key={event.eventId} event={event} />
               ))}
-            {eventDetail && (
-              <AccordionCard key={eventDetail.eventId} event={eventDetail} />
+            {!(events.length <= lessThan) && !eventDetail && (
+              <p className="text-sm text-slate-500">
+                イベントを100件以下に絞り込むと表示されます
+              </p>
             )}
           </Accordion>
         </TabsContent>

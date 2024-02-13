@@ -50,7 +50,7 @@ export const AccordionCard = ({
             <FaRegBookmark className="text-lg text-bookmark-primary" />
           </div>
           <CardHeader>
-            <CardTitle className="text-base">{event.title}</CardTitle>
+            <CardTitle className="w-11/12 text-base">{event.title}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="flex flex-col gap-y-1.5">

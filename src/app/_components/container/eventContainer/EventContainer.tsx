@@ -16,7 +16,11 @@ export const EventContainer = ({ eventData }: { eventData: EventResponse }) => {
   const [eventDetail, setEventDetail] = useState<Event | undefined>();
   return (
     <>
-      <Map events={eventDataState.events} setEventDetail={setEventDetail} />
+      <Map
+        eventDetail={eventDetail}
+        events={eventDataState.events}
+        setEventDetail={setEventDetail}
+      />
       <Sidebar
         events={eventDataState.events}
         resultReturned={eventDataState.resultsReturned}
