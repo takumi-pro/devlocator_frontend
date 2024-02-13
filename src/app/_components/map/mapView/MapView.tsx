@@ -12,6 +12,7 @@ import {
   TileLayer,
   ZoomControl,
 } from "react-leaflet";
+import MaekerClusterGroup from "react-leaflet-cluster";
 
 import { Event } from "@/api/events/type";
 
@@ -49,16 +50,18 @@ const MapView = ({ events }: { events: Event[] }) => {
       <ZoomControl position="bottomleft" />
 
       {/* TODO: マーカーの先端が目的地からずれている問題の解消 */}
-      {events.length &&
-        events.map((event) => (
-          <Marker
-            key={event.eventId}
-            icon={markerIcon}
-            position={[Number(event.lat), Number(event.lon)]}
-          >
-            <Popup>test</Popup>
-          </Marker>
-        ))}
+      <MaekerClusterGroup chunkedLoading>
+        {events.length &&
+          events.map((event) => (
+            <Marker
+              key={event.eventId}
+              icon={markerIcon}
+              position={[Number(event.lat), Number(event.lon)]}
+            >
+              <Popup>test</Popup>
+            </Marker>
+          ))}
+      </MaekerClusterGroup>
     </MapContainer>
   );
 };
