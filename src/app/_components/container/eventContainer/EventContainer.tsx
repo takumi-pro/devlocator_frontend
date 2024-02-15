@@ -27,7 +27,11 @@ export const EventContainer = ({ eventData }: { eventData: EventResponse }) => {
         eventDetail={eventDetail}
       />
       <Filter events={eventDataState.events} setEventData={setEventDataState} />
-      <DrawerWrapper />
+      <DrawerWrapper
+        events={eventDataState.events}
+        resultReturned={eventDataState.resultsReturned}
+        eventDetail={eventDetail}
+      />
     </>
   );
 };

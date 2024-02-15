@@ -3,59 +3,29 @@
 import { useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
 
+import { Event } from "@/api/events/type";
 import { Accordion } from "@/components/ui/accordion";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MAP } from "@/const/map";
 import { AccordionCard } from "@/ui/card";
 
-const events = [
-  {
-    id: 1,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 2,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 3,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 4,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 5,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-];
+type Props = {
+  events: Event[];
+  resultReturned: number;
+  eventDetail?: Event;
+};
 
 /**
  * ドロワー
  */
-export const DrawerWrapper = () => {
+export const DrawerWrapper = ({
+  events,
+  resultReturned,
+  eventDetail,
+}: Props) => {
   const [open, setIsOpen] = useState(false);
+  console.log(eventDetail);
   const onOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
       setIsOpen(true);
@@ -83,22 +53,26 @@ export const DrawerWrapper = () => {
             >
               {/* TODO: UIに切り出す */}
               <div className="text-sm text-slate-500">
-                <span className="mr-1 font-bold text-custom-fontcolor">99</span>
-                件表示されています
+                <span className="mr-1 font-bold text-custom-fontcolor">
+                  {resultReturned}
+                </span>
+                件がマップに表示されています
               </div>
               <Accordion
                 className="flex flex-col gap-y-3 overflow-scroll pt-3"
                 type="single"
                 collapsible
               >
-                {events.map((event) => (
-                  <AccordionCard
-                    isBorder
-                    isShadow={false}
-                    key={event.id}
-                    event={event}
-                  />
-                ))}
+                {events &&
+                  events.length <= MAP.DISPLAY_THAN &&
+                  events.map((event) => (
+                    <AccordionCard
+                      isBorder
+                      isShadow={false}
+                      key={event.eventId}
+                      event={event}
+                    />
+                  ))}
               </Accordion>
             </TabsContent>
             <TabsContent

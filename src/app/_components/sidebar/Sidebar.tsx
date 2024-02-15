@@ -6,6 +6,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { Event } from "@/api/events/type";
 import { Accordion } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MAP } from "@/const/map";
 import { AccordionCard } from "@/ui/card";
 
 type Props = {
@@ -18,7 +19,6 @@ type Props = {
  * イベント情報を表示するサイドバー
  */
 export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
-  const lessThan = 100;
   const [open, setOpen] = useState(true);
   return (
     <div
@@ -54,11 +54,11 @@ export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
               <AccordionCard key={eventDetail.eventId} event={eventDetail} />
             )}
             {events &&
-              events.length <= lessThan &&
+              events.length <= MAP.DISPLAY_THAN &&
               events.map((event) => (
                 <AccordionCard key={event.eventId} event={event} />
               ))}
-            {!(events.length <= lessThan) && !eventDetail && (
+            {!(events.length <= MAP.DISPLAY_THAN) && !eventDetail && (
               <p className="text-sm text-slate-500">
                 イベントを100件以下に絞り込むと表示されます
               </p>
