@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import parse from "html-react-parser";
+import Link from "next/link";
 import { FaRegBookmark, FaRegUser } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { LiaMapMarkerAltSolid } from "react-icons/lia";
@@ -15,6 +18,7 @@ type Props = {
   event: Event;
   isBorder?: boolean;
   isShadow?: boolean;
+  handleClick?: () => void;
 };
 
 /**
@@ -24,6 +28,7 @@ export const AccordionCard = ({
   event,
   isBorder = false,
   isShadow = true,
+  handleClick,
 }: Props) => {
   // const accordionRef = useRef<HTMLDivElement>(null);
   // const doggleAccordion = () => {
@@ -38,14 +43,16 @@ export const AccordionCard = ({
   //     accordionRef.current.setAttribute("data-state", "closed");
   //   }
   // }
+
   return (
     <Card
       className={`${isBorder && "border border-custom-sub"} ${
         isShadow && "shadow-lg"
       } relative`}
+      onClick={handleClick}
     >
       <AccordionItem value={`item-${event.eventId.toString()}`}>
-        <AccordionTrigger>
+        <AccordionTrigger className="w-full">
           <div className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-bookmark-primary bg-transparent">
             <FaRegBookmark className="text-lg text-bookmark-primary" />
           </div>
@@ -56,7 +63,7 @@ export const AccordionCard = ({
             <div className="flex flex-col gap-y-1.5">
               <div className="flex items-center justify-start gap-2 text-sm text-custom-gray-7070">
                 <IoCalendarOutline className="text-lg" />
-                {event.startedAt}
+                {format(event.startedAt, "yyy年MM月dd日 HH:mm~")}
               </div>
               <div className="flex items-center justify-start gap-2 text-sm text-custom-gray-7070">
                 <LiaMapMarkerAltSolid className="text-2xl" />
@@ -71,12 +78,25 @@ export const AccordionCard = ({
         </AccordionTrigger>
         <AccordionContent>
           <div className="text-base font-bold">イベント概要</div>
-          <p className="text-sm text-custom-gray-7070">概要</p>
+          {typeof event.description === "string" ? (
+            parse(event.description)
+          ) : (
+            <p className="text-sm text-custom-gray-7070">
+              概要が正しく表示できませんでした
+            </p>
+          )}
           <div className="mt-3 text-base font-bold">アクセス</div>
-          <div className="mt-3 flex h-10 w-full cursor-pointer items-center justify-center gap-1 rounded-lg border border-bookmark-primary text-sm text-custom-fontcolor transition-all hover:bg-custom-sub">
+          <p className="text-sm text-custom-gray-7070">
+            {event.address} {event.place}
+          </p>
+          <Link
+            href={event.eventUrl}
+            target="_blank"
+            className="mt-3 flex h-10 w-full cursor-pointer items-center justify-center gap-1 rounded-lg border border-bookmark-primary text-sm text-custom-fontcolor transition-all hover:bg-custom-sub"
+          >
             詳しくみる
             <VscLinkExternal />
-          </div>
+          </Link>
         </AccordionContent>
       </AccordionItem>
     </Card>

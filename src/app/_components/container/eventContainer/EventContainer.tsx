@@ -6,30 +6,25 @@ import { Event, EventResponse } from "@/api/events/type";
 import Map from "@/app/_components/map/map/Map";
 import { Filter } from "@/ui/filter/Filter";
 
-import { DrawerWrapper, Sidebar } from "../..";
+import { DrawerWrapper } from "../..";
 
 /**
  * EventContainer
  */
 export const EventContainer = ({ eventData }: { eventData: EventResponse }) => {
-  const [eventDataState, setEventDataState] = useState(eventData);
   const [eventDetail, setEventDetail] = useState<Event | undefined>();
   return (
     <>
       <Map
         eventDetail={eventDetail}
-        events={eventDataState.events}
+        events={eventData.events}
         setEventDetail={setEventDetail}
+        resultReturned={eventData.resultsReturned}
       />
-      <Sidebar
-        events={eventDataState.events}
-        resultReturned={eventDataState.resultsReturned}
-        eventDetail={eventDetail}
-      />
-      <Filter events={eventDataState.events} setEventData={setEventDataState} />
+      <Filter />
       <DrawerWrapper
-        events={eventDataState.events}
-        resultReturned={eventDataState.resultsReturned}
+        events={eventData.events}
+        resultReturned={eventData.resultsReturned}
         eventDetail={eventDetail}
       />
     </>

@@ -3,13 +3,13 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Dispatch, Fragment, SetStateAction, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Fragment, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoCalendarOutline } from "react-icons/io5";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import * as z from "zod";
 
-import { Event, EventResponse } from "@/api/events/type";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -35,6 +35,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { dateRangeToString } from "@/utils/date";
+import { buildQueryString } from "@/utils/params";
 
 type SearchDataType = {
   keyword: string;
@@ -43,17 +45,13 @@ type SearchDataType = {
   category: string[];
 };
 
-type Props = {
-  events: Event[];
-  setEventData: Dispatch<SetStateAction<EventResponse>>;
-};
-
 /**
  * 絞り込みボタン
  * クリックすると絞り込みダイアログが表示される
  */
-export const Filter = ({ events, setEventData }: Props) => {
+export const Filter = () => {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const [searchData, setSearchData] = useState<SearchDataType>({
     keyword: "",
     date: "",
@@ -84,9 +82,14 @@ export const Filter = ({ events, setEventData }: Props) => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    const dateString = `${data.date.from.toDateString()} - ${data.date.to?.toDateString()}`;
-    setSearchData({ ...data, date: dateString });
-    setEventData({ events, resultsReturned: 10 });
+    const dateRangeString = `${data.date.from.toDateString()} - ${data.date.to?.toDateString()}`;
+    const dateStrings = dateRangeToString(data.date.from, data.date.to);
+    setSearchData({ ...data, date: dateRangeString });
+    const queryString = buildQueryString({
+      keyword: data.category.join(","),
+      date: dateStrings,
+    });
+    router.push(`/${queryString}`);
   };
 
   const checkRef = useRef<HTMLButtonElement>(null);
@@ -179,7 +182,7 @@ export const Filter = ({ events, setEventData }: Props) => {
                 leaveTo="opacity-0 scale-95"
               >
                 {/* TODO: Dialogはuiに切り出す */}
-                <Dialog.Panel className="max-h-lg-dialog max-w-lg-dialog overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="max-h-lg-dialog max-w-lg-dialog overflow-scroll rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <div className={cn("grid gap-2")}>
                     {/* TODO: formの切り出し */}
                     <Form {...form}>

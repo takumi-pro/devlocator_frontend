@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
+import { useMap } from "react-leaflet";
 
 import { Event } from "@/api/events/type";
 import { Accordion } from "@/components/ui/accordion";
@@ -19,16 +20,26 @@ type Props = {
  * イベント情報を表示するサイドバー
  */
 export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
+  const map = useMap();
   const [open, setOpen] = useState(true);
+  const accordionRef = useRef<HTMLDivElement>(null);
+
+  const zoom = 15;
+  const locateEvent = (lng: number, lat: number) => {
+    map.setView([lat, lng], zoom, { animate: true });
+  };
+
   return (
     <div
       className={`${
         !open ? "translate-x-sidebar-small tablet:translate-x-sidebar" : ""
-      } absolute right-0 top-0 z-10 hidden h-sidebar w-sidebar-small bg-sidebar p-3 shadow-lg transition-all duration-200 mobile:block tablet:w-sidebar`}
+      } absolute right-0 top-0 z-500 hidden h-sidebar w-sidebar-small bg-sidebar p-3 shadow-lg transition-all duration-200 mobile:block tablet:w-sidebar`}
+      onMouseEnter={() => map.scrollWheelZoom.disable()}
+      onMouseLeave={() => map.scrollWheelZoom.enable()}
     >
       <div
         onClick={() => setOpen((prev) => !prev)}
-        className="relative right-12 z-0 flex h-10 w-9 cursor-pointer items-center justify-center rounded-l-lg bg-white"
+        className="relative right-12 flex h-10 w-9 cursor-pointer items-center justify-center rounded-l-lg bg-white"
       >
         <IoIosArrowForward className={`${!open && "rotate-180"}`} />
       </div>
@@ -46,17 +57,21 @@ export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
             件がマップに表示されています
           </div>
           <Accordion
-            className="mt-3 flex h-sidebar-content flex-col gap-y-3 overflow-scroll"
+            className="mt-3 flex h-sidebar-content flex-col gap-y-3 overflow-y-scroll"
             type="single"
             collapsible
+            ref={accordionRef}
           >
-            {eventDetail && (
-              <AccordionCard key={eventDetail.eventId} event={eventDetail} />
-            )}
             {events &&
               events.length <= MAP.DISPLAY_THAN &&
               events.map((event) => (
-                <AccordionCard key={event.eventId} event={event} />
+                <AccordionCard
+                  key={event.eventId}
+                  event={event}
+                  handleClick={() =>
+                    locateEvent(Number(event.lon), Number(event.lat))
+                  }
+                />
               ))}
             {!(events.length <= MAP.DISPLAY_THAN) && !eventDetail && (
               <p className="text-sm text-slate-500">

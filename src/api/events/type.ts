@@ -1,6 +1,7 @@
 export type Event = {
   eventId: string;
   title: string;
+  description: string;
   eventUrl: string;
   startedAt: string;
   endedAt: string;
@@ -12,6 +13,12 @@ export type Event = {
   address: string;
   lat: string;
   lon: string;
+};
+
+export type EventParams = {
+  keyword?: string;
+  date?: string;
+  prefecture?: string;
 };
 
 export type EventResponse = {
