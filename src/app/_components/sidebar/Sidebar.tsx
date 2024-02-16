@@ -33,7 +33,7 @@ export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
     <div
       className={`${
         !open ? "translate-x-sidebar-small tablet:translate-x-sidebar" : ""
-      } absolute right-0 top-0 z-500 hidden h-sidebar w-sidebar-small bg-sidebar p-3 shadow-lg transition-all duration-200 mobile:block tablet:w-sidebar`}
+      } absolute right-0 top-0 z-sidebar-z hidden h-sidebar w-sidebar-small bg-sidebar p-3 shadow-lg transition-all duration-200 mobile:block tablet:w-sidebar`}
       onMouseEnter={() => map.scrollWheelZoom.disable()}
       onMouseLeave={() => map.scrollWheelZoom.enable()}
     >

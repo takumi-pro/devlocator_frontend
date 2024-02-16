@@ -28,7 +28,7 @@ const config = {
     },
     extend: {
       zIndex: {
-        "500": "500",
+        "sidebar-z": "500",
       },
       width: {
         sidebar: "424px",
