@@ -26,7 +26,7 @@ export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
 
   const zoom = 15;
   const locateEvent = (lng: number, lat: number) => {
-    map.setView([lat, lng], zoom, { animate: true });
+    map.flyTo([lat, lng], zoom, { duration: 1.8 });
   };
 
   return (
