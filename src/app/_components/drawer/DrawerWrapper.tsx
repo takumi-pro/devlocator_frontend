@@ -1,61 +1,35 @@
 "use client";
 
+import L from "leaflet";
 import { useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
+import { useMap } from "react-leaflet";
 
+import { Event } from "@/api/events/type";
 import { Accordion } from "@/components/ui/accordion";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MAP } from "@/const/map";
 import { AccordionCard } from "@/ui/card";
 
-const events = [
-  {
-    id: 1,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 2,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 3,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 4,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-  {
-    id: 5,
-    title: "新宿ミートアップ#4",
-    date: "2023/12/16（土）12:00~13:00",
-    address: "東京都新宿区西新宿６丁目２４−１西新宿三井ビルディング１５０３",
-    limit: 60,
-    current: 50,
-  },
-];
+type Props = {
+  events: Event[];
+  resultReturned: number;
+  eventDetail?: Event;
+  popup: L.Popup;
+};
 
 /**
  * ドロワー
  */
-export const DrawerWrapper = () => {
+export const DrawerWrapper = ({
+  events,
+  resultReturned,
+  eventDetail,
+  popup,
+}: Props) => {
   const [open, setIsOpen] = useState(false);
+  const map = useMap();
   const onOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
       setIsOpen(true);
@@ -63,8 +37,16 @@ export const DrawerWrapper = () => {
       setIsOpen(false);
     }
   };
+
+  const zoom = 15;
+  const locateEvent = (lng: number, lat: number, popupContent: string) => {
+    map.flyTo([lat, lng], zoom, { duration: 1.8 });
+    const targetPopup = popup.setLatLng([lat, lng]).setContent(popupContent);
+    map.openPopup(targetPopup);
+  };
+
   return (
-    <div className="absolute right-3 top-3 z-10 block mobile:hidden">
+    <div className="absolute right-3 top-3 z-sidebar-z block h-sidebar mobile:hidden">
       <Drawer shouldScaleBackground open={open} onOpenChange={onOpenChange}>
         <DrawerTrigger className="relative top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg bg-white">
           <IoIosArrowUp />
@@ -83,22 +65,35 @@ export const DrawerWrapper = () => {
             >
               {/* TODO: UIに切り出す */}
               <div className="text-sm text-slate-500">
-                <span className="mr-1 font-bold text-custom-fontcolor">99</span>
-                件表示されています
+                <span className="mr-1 font-bold text-custom-fontcolor">
+                  {resultReturned}
+                </span>
+                件がマップに表示されています
               </div>
               <Accordion
-                className="flex flex-col gap-y-3 overflow-scroll pt-3"
+                className="flex h-full flex-col gap-y-3 overflow-y-scroll pt-3"
                 type="single"
                 collapsible
               >
-                {events.map((event) => (
-                  <AccordionCard
-                    isBorder
-                    isShadow={false}
-                    key={event.id}
-                    event={event}
-                  />
-                ))}
+                {events &&
+                  events.length <= MAP.DISPLAY_THAN &&
+                  events.map((event) => (
+                    <AccordionCard
+                      isBorder
+                      isShadow={false}
+                      key={event.eventId}
+                      event={event}
+                      eventDetail={eventDetail}
+                      isSelected={false}
+                      handleClick={() =>
+                        locateEvent(
+                          Number(event.lon),
+                          Number(event.lat),
+                          `${event.address} ${event.place}`
+                        )
+                      }
+                    />
+                  ))}
               </Accordion>
             </TabsContent>
             <TabsContent

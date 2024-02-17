@@ -12,7 +12,7 @@ import { TbLogout } from "react-icons/tb";
  */
 const Dropdown = () => {
   return (
-    <Menu as={"div"} className="relative inline-block text-left">
+    <Menu as={"div"} className="relative z-sidebar-z inline-block text-left">
       <div>
         <Menu.Button className="rounded-full">
           <Image

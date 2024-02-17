@@ -3,6 +3,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { Fragment, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoCalendarOutline } from "react-icons/io5";
@@ -34,6 +35,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { dateRangeToString } from "@/utils/date";
+import { buildQueryString } from "@/utils/params";
 
 type SearchDataType = {
   keyword: string;
@@ -48,6 +51,7 @@ type SearchDataType = {
  */
 export const Filter = () => {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   const [searchData, setSearchData] = useState<SearchDataType>({
     keyword: "",
     date: "",
@@ -78,9 +82,14 @@ export const Filter = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
-    const dateString = `${data.date.from.toDateString()} - ${data.date.to?.toDateString()}`;
-    setSearchData({ ...data, date: dateString });
+    const dateRangeString = `${data.date.from.toDateString()} - ${data.date.to?.toDateString()}`;
+    const dateStrings = dateRangeToString(data.date.from, data.date.to);
+    setSearchData({ ...data, date: dateRangeString });
+    const queryString = buildQueryString({
+      keyword: data.category.join(","),
+      date: dateStrings,
+    });
+    router.push(`/${queryString}`);
   };
 
   const checkRef = useRef<HTMLButtonElement>(null);
@@ -173,7 +182,7 @@ export const Filter = () => {
                 leaveTo="opacity-0 scale-95"
               >
                 {/* TODO: Dialogはuiに切り出す */}
-                <Dialog.Panel className="max-h-lg-dialog max-w-lg-dialog overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="max-h-lg-dialog max-w-lg-dialog overflow-scroll rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <div className={cn("grid gap-2")}>
                     {/* TODO: formの切り出し */}
                     <Form {...form}>

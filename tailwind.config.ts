@@ -13,6 +13,7 @@ const config = {
     screens: {
       tablet: "900px",
       mobile: "830px",
+      "small-calender": "612px",
     },
     container: {
       center: true,
@@ -26,6 +27,9 @@ const config = {
       "sidebar-small": "390px",
     },
     extend: {
+      zIndex: {
+        "sidebar-z": "500",
+      },
       width: {
         sidebar: "424px",
         "sidebar-small": "390px",
@@ -36,10 +40,10 @@ const config = {
         "sidebar-content": "calc(100vh - 56px - 120px)",
       },
       maxWidth: {
-        "lg-dialog": "560px",
+        "lg-dialog": "600px",
       },
       maxHeight: {
-        "lg-dialog": "700px",
+        "lg-dialog": "100vh - 32px",
         category: "350px",
       },
       minHeight: {

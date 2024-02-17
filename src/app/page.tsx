@@ -1,28 +1,19 @@
-import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { fetchEvents } from "@/api/events/events";
 
-import { Filter } from "@/ui/filter/Filter";
+import { EventContainer } from "./_components/container/eventContainer/EventContainer";
 
-import { DrawerWrapper, Sidebar } from "./_components";
+type Props = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
 /**
  * Home
  */
-const Home = () => {
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("@/ui/map/Map").then((module) => module), {
-        ssr: false,
-      }),
-    []
-  );
-
+const Home = async ({ searchParams }: Props) => {
+  const eventData = await fetchEvents(searchParams);
   return (
     <main className="relative">
-      <Map />
-      <Sidebar />
-      <Filter />
-      <DrawerWrapper />
+      <EventContainer eventData={eventData} />
     </main>
   );
 };
