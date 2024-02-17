@@ -1,5 +1,6 @@
 "use client";
 
+import L from "leaflet";
 import { useRef, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { useMap } from "react-leaflet";
@@ -14,19 +15,27 @@ type Props = {
   events: Event[];
   resultReturned: number;
   eventDetail?: Event;
+  popup: L.Popup;
 };
 
 /**
  * イベント情報を表示するサイドバー
  */
-export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
+export const Sidebar = ({
+  events,
+  resultReturned,
+  eventDetail,
+  popup,
+}: Props) => {
   const map = useMap();
   const [open, setOpen] = useState(true);
   const accordionRef = useRef<HTMLDivElement>(null);
 
   const zoom = 15;
-  const locateEvent = (lng: number, lat: number) => {
+  const locateEvent = (lng: number, lat: number, popupContent: string) => {
     map.flyTo([lat, lng], zoom, { duration: 1.8 });
+    const targetPopup = popup.setLatLng([lat, lng]).setContent(popupContent);
+    map.openPopup(targetPopup);
   };
 
   return (
@@ -62,6 +71,9 @@ export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
             collapsible
             ref={accordionRef}
           >
+            {eventDetail && events.length > MAP.DISPLAY_THAN && (
+              <AccordionCard event={eventDetail} />
+            )}
             {events &&
               events.length <= MAP.DISPLAY_THAN &&
               events.map((event) => (
@@ -69,7 +81,11 @@ export const Sidebar = ({ events, resultReturned, eventDetail }: Props) => {
                   key={event.eventId}
                   event={event}
                   handleClick={() =>
-                    locateEvent(Number(event.lon), Number(event.lat))
+                    locateEvent(
+                      Number(event.lon),
+                      Number(event.lat),
+                      `${event.address} ${event.place}`
+                    )
                   }
                 />
               ))}

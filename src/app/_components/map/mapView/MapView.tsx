@@ -24,6 +24,8 @@ const markerIcon = L.icon({
   shadowUrl: iconShadow.src,
 });
 
+const popup = L.popup();
+
 type Props = {
   events: Event[];
   eventDetail?: Event;
@@ -49,7 +51,6 @@ const MapView = ({
       center={[lon, lat]}
       zoom={10}
       attributionControl={false}
-      // scrollWheelZoom={false}
       zoomControl={false}
       style={{
         height: "calc(100vh - 56px)",
@@ -64,6 +65,7 @@ const MapView = ({
         events={events}
         resultReturned={resultReutrned}
         eventDetail={eventDetail}
+        popup={popup}
       />
 
       <TileLayer
@@ -98,11 +100,6 @@ const MapView = ({
                 {event.place}
               </Popup>
             </Marker>
-            // <ClickMarker
-            //   key={event.eventId}
-            //   event={event}
-            //   setEventDetail={setEventDetail}
-            // />
           ))}
       </MaekerClusterGroup>
     </MapContainer>

@@ -1,6 +1,9 @@
+"use client";
+
 import { format } from "date-fns";
 import parse from "html-react-parser";
 import Link from "next/link";
+import { useRef } from "react";
 import { FaRegBookmark, FaRegUser } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { LiaMapMarkerAltSolid } from "react-icons/lia";
@@ -30,7 +33,16 @@ export const AccordionCard = ({
   isShadow = true,
   handleClick,
 }: Props) => {
-  // const accordionRef = useRef<HTMLDivElement>(null);
+  const accordionRef = useRef<HTMLButtonElement>(null);
+
+  const toggleAccordion = () => {
+    if (
+      handleClick &&
+      accordionRef &&
+      accordionRef.current?.ariaExpanded === "false"
+    )
+      handleClick();
+  };
   // const doggleAccordion = () => {
   //   if (accordionRef.current) {
   //     const isOpen = accordionRef.current.ariaExpanded === "true";
@@ -49,10 +61,10 @@ export const AccordionCard = ({
       className={`${isBorder && "border border-custom-sub"} ${
         isShadow && "shadow-lg"
       } relative`}
-      onClick={handleClick}
+      onClick={toggleAccordion}
     >
       <AccordionItem value={`item-${event.eventId.toString()}`}>
-        <AccordionTrigger className="w-full">
+        <AccordionTrigger ref={accordionRef} className="w-full">
           <div className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-bookmark-primary bg-transparent">
             <FaRegBookmark className="text-lg text-bookmark-primary" />
           </div>
