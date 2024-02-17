@@ -28,8 +28,8 @@ export const Sidebar = ({
   popup,
 }: Props) => {
   const map = useMap();
-  const [open, setOpen] = useState(true);
   const accordionRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(true);
 
   const zoom = 15;
   const locateEvent = (lng: number, lat: number, popupContent: string) => {
@@ -66,13 +66,23 @@ export const Sidebar = ({
             件がマップに表示されています
           </div>
           <Accordion
-            className="mt-3 flex h-sidebar-content flex-col gap-y-3 overflow-y-scroll"
+            className="mt-3 flex h-sidebar-content flex-col gap-y-3 overflow-y-scroll scroll-smooth"
             type="single"
             collapsible
             ref={accordionRef}
           >
             {eventDetail && events.length > MAP.DISPLAY_THAN && (
-              <AccordionCard event={eventDetail} />
+              <AccordionCard
+                handleClick={() =>
+                  locateEvent(
+                    Number(eventDetail.lon),
+                    Number(eventDetail.lat),
+                    `${eventDetail.address} ${eventDetail.place}`
+                  )
+                }
+                isSelected
+                event={eventDetail}
+              />
             )}
             {events &&
               events.length <= MAP.DISPLAY_THAN &&
@@ -80,6 +90,9 @@ export const Sidebar = ({
                 <AccordionCard
                   key={event.eventId}
                   event={event}
+                  eventDetail={eventDetail}
+                  accordionContainerRef={accordionRef}
+                  isSelected={event.eventId == eventDetail?.eventId}
                   handleClick={() =>
                     locateEvent(
                       Number(event.lon),

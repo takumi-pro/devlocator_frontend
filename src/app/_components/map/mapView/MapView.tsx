@@ -17,7 +17,7 @@ import MaekerClusterGroup from "react-leaflet-cluster";
 
 import { Event } from "@/api/events/type";
 
-import { Sidebar } from "../..";
+import { DrawerWrapper, Sidebar } from "../..";
 
 const markerIcon = L.icon({
   iconUrl: icon.src,
@@ -30,7 +30,7 @@ type Props = {
   events: Event[];
   eventDetail?: Event;
   setEventDetail: Dispatch<SetStateAction<Event | undefined>>;
-  resultReutrned: number;
+  resultReturned: number;
 };
 
 /**
@@ -40,7 +40,7 @@ const MapView = ({
   events,
   setEventDetail,
   eventDetail,
-  resultReutrned,
+  resultReturned,
 }: Props) => {
   // TODO: 別ファイルで管理
   const lat = 139.7668576;
@@ -51,6 +51,7 @@ const MapView = ({
       center={[lon, lat]}
       zoom={10}
       attributionControl={false}
+      scrollWheelZoom={false}
       zoomControl={false}
       style={{
         height: "calc(100vh - 56px)",
@@ -63,7 +64,13 @@ const MapView = ({
        ******************************/}
       <Sidebar
         events={events}
-        resultReturned={resultReutrned}
+        resultReturned={resultReturned}
+        eventDetail={eventDetail}
+        popup={popup}
+      />
+      <DrawerWrapper
+        events={events}
+        resultReturned={resultReturned}
         eventDetail={eventDetail}
         popup={popup}
       />

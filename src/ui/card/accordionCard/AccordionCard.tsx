@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import parse from "html-react-parser";
 import Link from "next/link";
-import { useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import { FaRegBookmark, FaRegUser } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { LiaMapMarkerAltSolid } from "react-icons/lia";
@@ -19,9 +19,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
   event: Event;
+  eventDetail?: Event;
   isBorder?: boolean;
   isShadow?: boolean;
   handleClick?: () => void;
+  accordionContainerRef?: RefObject<HTMLDivElement>;
+  isSelected: boolean;
 };
 
 /**
@@ -31,9 +34,13 @@ export const AccordionCard = ({
   event,
   isBorder = false,
   isShadow = true,
+  isSelected = false,
+  eventDetail,
   handleClick,
+  accordionContainerRef,
 }: Props) => {
   const accordionRef = useRef<HTMLButtonElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const toggleAccordion = () => {
     if (
@@ -56,14 +63,31 @@ export const AccordionCard = ({
   //   }
   // }
 
+  useEffect(() => {
+    if (
+      eventDetail &&
+      cardRef.current &&
+      accordionContainerRef?.current &&
+      eventDetail.eventId === event.eventId
+    ) {
+      const topMargin = 96;
+      accordionContainerRef.current.scrollTop =
+        cardRef.current.offsetTop - topMargin;
+    }
+  }, [eventDetail, event.eventId, accordionContainerRef]);
+
   return (
     <Card
-      className={`${isBorder && "border border-custom-sub"} ${
-        isShadow && "shadow-lg"
+      className={`${isBorder && "border"} ${isShadow && "shadow-lg"} ${
+        isSelected ? "border-custom-main" : "border-custom-sub"
       } relative`}
       onClick={toggleAccordion}
+      ref={cardRef}
     >
-      <AccordionItem value={`item-${event.eventId.toString()}`}>
+      <AccordionItem
+        className={`rounded-2xl border ${isSelected && "border-custom-main"}`}
+        value={`item-${event.eventId.toString()}`}
+      >
         <AccordionTrigger ref={accordionRef} className="w-full">
           <div className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-bookmark-primary bg-transparent">
             <FaRegBookmark className="text-lg text-bookmark-primary" />

@@ -1,7 +1,9 @@
 "use client";
 
+import L from "leaflet";
 import { useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
+import { useMap } from "react-leaflet";
 
 import { Event } from "@/api/events/type";
 import { Accordion } from "@/components/ui/accordion";
@@ -14,6 +16,7 @@ type Props = {
   events: Event[];
   resultReturned: number;
   eventDetail?: Event;
+  popup: L.Popup;
 };
 
 /**
@@ -23,9 +26,10 @@ export const DrawerWrapper = ({
   events,
   resultReturned,
   eventDetail,
+  popup,
 }: Props) => {
   const [open, setIsOpen] = useState(false);
-  console.log(eventDetail);
+  const map = useMap();
   const onOpenChange = (nextOpen: boolean) => {
     if (nextOpen) {
       setIsOpen(true);
@@ -33,8 +37,16 @@ export const DrawerWrapper = ({
       setIsOpen(false);
     }
   };
+
+  const zoom = 15;
+  const locateEvent = (lng: number, lat: number, popupContent: string) => {
+    map.flyTo([lat, lng], zoom, { duration: 1.8 });
+    const targetPopup = popup.setLatLng([lat, lng]).setContent(popupContent);
+    map.openPopup(targetPopup);
+  };
+
   return (
-    <div className="absolute right-3 top-3 z-10 block mobile:hidden">
+    <div className="absolute right-3 top-3 z-sidebar-z block h-sidebar mobile:hidden">
       <Drawer shouldScaleBackground open={open} onOpenChange={onOpenChange}>
         <DrawerTrigger className="relative top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg bg-white">
           <IoIosArrowUp />
@@ -59,7 +71,7 @@ export const DrawerWrapper = ({
                 件がマップに表示されています
               </div>
               <Accordion
-                className="flex flex-col gap-y-3 overflow-scroll pt-3"
+                className="flex h-full flex-col gap-y-3 overflow-y-scroll pt-3"
                 type="single"
                 collapsible
               >
@@ -71,6 +83,15 @@ export const DrawerWrapper = ({
                       isShadow={false}
                       key={event.eventId}
                       event={event}
+                      eventDetail={eventDetail}
+                      isSelected={false}
+                      handleClick={() =>
+                        locateEvent(
+                          Number(event.lon),
+                          Number(event.lat),
+                          `${event.address} ${event.place}`
+                        )
+                      }
                     />
                   ))}
               </Accordion>

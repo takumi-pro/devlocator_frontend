@@ -40,7 +40,7 @@ const Map = ({
       events={events}
       eventDetail={eventDetail}
       setEventDetail={setEventDetail}
-      resultReutrned={resultReturned}
+      resultReturned={resultReturned}
     />
   );
 };
