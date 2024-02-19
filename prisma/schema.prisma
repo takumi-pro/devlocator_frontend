@@ -33,22 +33,23 @@ model Account {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model bookmarked_events {
-  event_id           Int       @id
+  eventId           Int       @id  @map("event_id")
+  userId            String    @map("user_id")
   title              String    @db.VarChar(255)
   catch              String?   @db.VarChar(255)
   description        String?   @db.Text
-  event_url          String?   @db.VarChar(255)
-  started_at         DateTime? @db.DateTime(0)
-  ended_at           DateTime? @db.DateTime(0)
+  eventUrl          String?   @db.VarChar(255)  @map("event_url")
+  startedAt         DateTime? @db.DateTime(0)  @map("started_at")
+  endedAt           DateTime? @db.DateTime(0)  @map("ended_at")
   limit              Int?
-  hash_tag           String?   @db.VarChar(100)
-  event_type         String?   @db.VarChar(50)
+  hashTag           String?   @db.VarChar(100)  @map("hash_tag")
+  eventType         String?   @db.VarChar(50)  @map("event_type")
   accepted           Int?
   waiting            Int?
-  updated_at         DateTime? @db.DateTime(0)
-  owner_id           Int?
-  owner_nickname     String?   @db.VarChar(255)
-  owner_display_name String?   @db.VarChar(255)
+  updatedAt         DateTime? @db.DateTime(0)  @map("updated_at")
+  ownerId           Int?    @map("owner_id")
+  ownerNickname     String?   @db.VarChar(255)  @map("owner_nickname")
+  ownerDisplayName String?   @db.VarChar(255)  @map("owner_display_name")
   place              String?   @db.VarChar(255)
   address            String?   @db.VarChar(255)
   lat                String    @db.VarChar(255)

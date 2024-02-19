@@ -1,13 +1,15 @@
 "use client";
 
 import L from "leaflet";
+import { Session } from "next-auth";
 import { useRef, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { useMap } from "react-leaflet";
 
-import { Event } from "@/api/events/type";
+import { BookmarkedEvent, Event } from "@/api/events/type";
 import { Accordion } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { nextApiInstance } from "@/config/axios";
 import { MAP } from "@/const/map";
 import { AccordionCard } from "@/ui/card";
 
@@ -16,6 +18,8 @@ type Props = {
   resultReturned: number;
   eventDetail?: Event;
   popup: L.Popup;
+  toggleBookmark: (event: Event, userId: string) => Promise<void>;
+  session: Session | undefined;
 };
 
 /**
@@ -26,16 +30,28 @@ export const Sidebar = ({
   resultReturned,
   eventDetail,
   popup,
+  toggleBookmark,
+  session,
 }: Props) => {
   const map = useMap();
   const accordionRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(true);
+  const [bookmarkedEvents, setBookmarkedEvents] = useState<BookmarkedEvent[]>();
 
   const zoom = 15;
   const locateEvent = (lng: number, lat: number, popupContent: string) => {
     map.flyTo([lat, lng], zoom, { duration: 1.8 });
     const targetPopup = popup.setLatLng([lat, lng]).setContent(popupContent);
     map.openPopup(targetPopup);
+  };
+
+  // ブックマークしたイベント取得
+  const fetchBookmarkedEvent = async () => {
+    if (!session || !session.user) return;
+    const bookmarkedEvents = await nextApiInstance.get(
+      `/api/users/${session.user.id}/events`
+    );
+    setBookmarkedEvents(bookmarkedEvents.data.bookmarkedEvents);
   };
 
   return (
@@ -55,7 +71,9 @@ export const Sidebar = ({
       <Tabs defaultValue="all" className="relative -top-10">
         <TabsList className="shadow-lg">
           <TabsTrigger value="all">すべてのイベント</TabsTrigger>
-          <TabsTrigger value="bookmark">ブックマークしたイベント</TabsTrigger>
+          <TabsTrigger onClick={fetchBookmarkedEvent} value="bookmark">
+            ブックマークしたイベント
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="all">
           {/* TODO: UIに切り出す */}
@@ -82,6 +100,8 @@ export const Sidebar = ({
                 }
                 isSelected
                 event={eventDetail}
+                toggleBookmark={toggleBookmark}
+                session={session}
               />
             )}
             {events &&
@@ -100,6 +120,8 @@ export const Sidebar = ({
                       `${event.address} ${event.place}`
                     )
                   }
+                  session={session}
+                  toggleBookmark={toggleBookmark}
                 />
               ))}
             {!(events.length <= MAP.DISPLAY_THAN) && !eventDetail && (
@@ -109,7 +131,48 @@ export const Sidebar = ({
             )}
           </Accordion>
         </TabsContent>
-        <TabsContent value="bookmark">bookmark events</TabsContent>
+        <TabsContent value="bookmark">
+          <div className="mt-6 text-sm text-slate-500">
+            {!session?.user && "ブックマークするにはログインが必要です"}
+            {session?.user && Boolean(bookmarkedEvents?.length) && (
+              <>
+                <span className="mr-1 font-bold text-custom-fontcolor">
+                  {bookmarkedEvents?.length}
+                </span>
+                件がブックマークされています
+              </>
+            )}
+            {session?.user &&
+              Boolean(!bookmarkedEvents?.length) &&
+              "ブックマークしたイベントはありません"}
+          </div>
+          <Accordion
+            className="mt-3 flex h-sidebar-content flex-col gap-y-3 overflow-y-scroll scroll-smooth"
+            type="single"
+            collapsible
+            ref={accordionRef}
+          >
+            {bookmarkedEvents &&
+              bookmarkedEvents.map((event) => (
+                <AccordionCard
+                  key={event.eventId}
+                  event={event}
+                  eventDetail={eventDetail}
+                  accordionContainerRef={accordionRef}
+                  isSelected={event.eventId == eventDetail?.eventId}
+                  handleClick={() =>
+                    locateEvent(
+                      Number(event.lon),
+                      Number(event.lat),
+                      `${event.address} ${event.place}`
+                    )
+                  }
+                  session={session}
+                  toggleBookmark={toggleBookmark}
+                />
+              ))}
+          </Accordion>
+        </TabsContent>
       </Tabs>
     </div>
   );

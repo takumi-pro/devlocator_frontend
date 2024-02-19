@@ -1,26 +1,22 @@
 import "leaflet/dist/leaflet.css";
 
+import { Session } from "next-auth";
 import dynamic from "next/dynamic";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { useMemo } from "react";
 
 import { Event } from "@/api/events/type";
 
 type Props = {
   events: Event[];
-  eventDetail?: Event;
-  setEventDetail: Dispatch<SetStateAction<Event | undefined>>;
   resultReturned: number;
+  session: Session | undefined;
+  toggleBookmark: (event: Event, userId: string) => Promise<void>;
 };
 
 /**
  * Leafletで地図を表示する
  */
-const Map = ({
-  events,
-  setEventDetail,
-  eventDetail,
-  resultReturned,
-}: Props) => {
+const Map = ({ events, resultReturned, session, toggleBookmark }: Props) => {
   const MapView = useMemo(
     () =>
       dynamic(
@@ -37,10 +33,10 @@ const Map = ({
 
   return (
     <MapView
+      session={session}
       events={events}
-      eventDetail={eventDetail}
-      setEventDetail={setEventDetail}
       resultReturned={resultReturned}
+      toggleBookmark={toggleBookmark}
     />
   );
 };
