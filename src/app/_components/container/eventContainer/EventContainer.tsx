@@ -1,30 +1,52 @@
-"use client";
-
-import { useState } from "react";
-
 import { Event, EventResponse } from "@/api/events/type";
 import Map from "@/app/_components/map/map/Map";
+import {
+  createBookmark,
+  deleteBookmark,
+  findBookmark,
+} from "@/repositories/bookmark";
 import { Filter } from "@/ui/filter/Filter";
+import { getSession } from "@/utils/session";
+
+type Props = {
+  eventData: EventResponse;
+};
 
 /**
  * EventContainer
  */
-export const EventContainer = ({ eventData }: { eventData: EventResponse }) => {
-  const [eventDetail, setEventDetail] = useState<Event | undefined>();
+export const EventContainer = async ({ eventData }: Props) => {
+  const session = await getSession();
+
+  const toggleBookmark = async (event: Event, userId: string) => {
+    "use server";
+    const targetBookmarkEvent = await findBookmark(event.eventId, userId);
+    if (targetBookmarkEvent) {
+      await deleteBookmark(event.eventId, userId);
+      console.log("delete bookmark !!");
+    } else {
+      await createBookmark(userId, event);
+      console.log("create bookmark !!");
+    }
+  };
+
+  // const isBookmarked = async (eventId: number) => {
+  //   "use server";
+  //   const bookmarkedEvent = await prisma.bookmarked_events.findFirst({
+  //     where: { event_id: eventId },
+  //   });
+  //   return Boolean(bookmarkedEvent);
+  // };
+
   return (
     <>
       <Map
-        eventDetail={eventDetail}
+        session={session}
         events={eventData.events}
-        setEventDetail={setEventDetail}
         resultReturned={eventData.resultsReturned}
+        toggleBookmark={toggleBookmark}
       />
       <Filter />
-      {/* <DrawerWrapper
-        events={eventData.events}
-        resultReturned={eventData.resultsReturned}
-        eventDetail={eventDetail}
-      /> */}
     </>
   );
 };

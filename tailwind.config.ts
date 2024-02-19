@@ -52,6 +52,8 @@ const config = {
       colors: {
         sidebar: "rgba(255, 255, 255, .75)",
         "bookmark-primary": "#00A4C9",
+        "bookmark-no": "rgb(83, 100, 113)",
+        "bookmark-bghover": "rgba(29, 155, 240, 0.10)",
         grad: {
           "main-from": "#00A4C9",
           "main-from-50": "#006EA6",

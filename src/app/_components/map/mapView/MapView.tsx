@@ -4,7 +4,8 @@ import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
-import { Dispatch, SetStateAction } from "react";
+import { Session } from "next-auth";
+import { useState } from "react";
 import {
   AttributionControl,
   MapContainer,
@@ -28,9 +29,9 @@ const popup = L.popup();
 
 type Props = {
   events: Event[];
-  eventDetail?: Event;
-  setEventDetail: Dispatch<SetStateAction<Event | undefined>>;
   resultReturned: number;
+  session: Session | undefined;
+  toggleBookmark: (event: Event, userId: string) => Promise<void>;
 };
 
 /**
@@ -38,13 +39,15 @@ type Props = {
  */
 const MapView = ({
   events,
-  setEventDetail,
-  eventDetail,
   resultReturned,
+  session,
+  toggleBookmark,
 }: Props) => {
   // TODO: 別ファイルで管理
   const lat = 139.7668576;
   const lon = 35.6810436;
+
+  const [eventDetail, setEventDetail] = useState<Event | undefined>();
 
   return (
     <MapContainer
@@ -67,6 +70,8 @@ const MapView = ({
         resultReturned={resultReturned}
         eventDetail={eventDetail}
         popup={popup}
+        toggleBookmark={toggleBookmark}
+        session={session}
       />
       <DrawerWrapper
         events={events}

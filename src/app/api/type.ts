@@ -3,3 +3,16 @@ export type EventDetailParmas = {
     eventId: string;
   };
 };
+
+export type IsBookmarkedParams = {
+  params: {
+    eventId: string;
+    userId: string;
+  };
+};
+
+export type FetchBookmarkedEventParams = {
+  params: {
+    userId: string;
+  };
+};
