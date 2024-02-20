@@ -11,9 +11,9 @@ const config = {
   prefix: "",
   theme: {
     screens: {
-      tablet: "900px",
-      mobile: "830px",
       "small-calender": "612px",
+      mobile: "830px",
+      tablet: "900px",
     },
     container: {
       center: true,
@@ -34,6 +34,7 @@ const config = {
         sidebar: "424px",
         "sidebar-small": "390px",
         "lg-dialog": "560px",
+        filter: "calc(100vw - 600px)",
       },
       height: {
         sidebar: "calc(100vh - 56px)",
@@ -41,6 +42,9 @@ const config = {
       },
       maxWidth: {
         "lg-dialog": "600px",
+        filter: "calc(100vw - 620px)",
+        "filter-tablet": "calc(100vw - 585px)",
+        "filter-mobile": "calc(100vw - 200px)",
       },
       maxHeight: {
         "lg-dialog": "100vh - 32px",

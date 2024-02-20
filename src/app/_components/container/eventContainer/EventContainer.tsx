@@ -23,10 +23,8 @@ export const EventContainer = async ({ eventData }: Props) => {
     const targetBookmarkEvent = await findBookmark(event.eventId, userId);
     if (targetBookmarkEvent) {
       await deleteBookmark(event.eventId, userId);
-      console.log("delete bookmark !!");
     } else {
       await createBookmark(userId, event);
-      console.log("create bookmark !!");
     }
   };
 

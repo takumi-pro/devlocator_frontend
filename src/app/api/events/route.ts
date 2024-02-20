@@ -2,7 +2,10 @@ import { type NextRequest } from "next/server";
 
 import { axiosInstance } from "@/config/axios";
 import { ENDPOINT } from "@/const/api";
-import { buildQueryString } from "@/utils/params";
+import {
+  buildQueryString,
+  translateQueryPramsCategoryToKeyword,
+} from "@/utils/params";
 
 /**
  * GET
@@ -10,9 +13,13 @@ import { buildQueryString } from "@/utils/params";
  */
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
+
   const keyword = searchParams.get("keyword");
   const date = searchParams.get("date");
-  const queryString = buildQueryString({ keyword, date });
+  const category = searchParams.get("category");
+  const newKeyword = translateQueryPramsCategoryToKeyword(keyword, category);
+
+  const queryString = buildQueryString({ keyword: newKeyword, date });
   const result = await axiosInstance.get(`${ENDPOINT.EVENT}${queryString}`);
   return Response.json({ ...result.data });
 }

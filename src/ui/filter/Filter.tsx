@@ -2,7 +2,7 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { addMonths, format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Fragment, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -34,13 +34,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DAYS_TO_ADD_FOR_NEXT_DAY } from "@/const/date";
 import { cn } from "@/lib/utils";
 import { dateRangeToString } from "@/utils/date";
 import { buildQueryString } from "@/utils/params";
 
 type SearchDataType = {
   keyword: string;
-  date: string;
+  date:
+    | {
+        from: Date;
+        to: Date | undefined;
+      }
+    | undefined;
   prefecture: string;
   category: string[];
 };
@@ -54,7 +60,7 @@ export const Filter = () => {
   const router = useRouter();
   const [searchData, setSearchData] = useState<SearchDataType>({
     keyword: "",
-    date: "",
+    date: undefined,
     prefecture: "",
     category: [],
   });
@@ -68,13 +74,16 @@ export const Filter = () => {
     keyword: z.string(),
     prefecture: z.string(),
   });
+
+  const today = new Date();
+  const oneMonthLater = addMonths(today, DAYS_TO_ADD_FOR_NEXT_DAY);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       keyword: "",
       date: {
-        from: new Date("2024-02-01"),
-        to: new Date("2024-02-01"),
+        from: today,
+        to: oneMonthLater,
       },
       prefecture: "",
       category: [],
@@ -82,11 +91,16 @@ export const Filter = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    const dateRangeString = `${data.date.from.toDateString()} - ${data.date.to?.toDateString()}`;
-    const dateStrings = dateRangeToString(data.date.from, data.date.to);
-    setSearchData({ ...data, date: dateRangeString });
+    const keyword = data.keyword;
+    const category = data.category;
+    const date = data.date;
+
+    // const dateRangeString = `${date.from.toDateString()} - ${date.to?.toDateString()}`;
+    const dateStrings = dateRangeToString(date.from, date.to);
+    setSearchData({ ...data, date: { from: date.from, to: date.to } });
     const queryString = buildQueryString({
-      keyword: data.category.join(","),
+      keyword,
+      category: category.join(","),
       date: dateStrings,
     });
     router.push(`/${queryString}`);
@@ -138,16 +152,37 @@ export const Filter = () => {
 
   return (
     <>
-      <div className="absolute left-6 top-3 z-10">
+      <div className="absolute left-3 top-3 z-10 mobile:left-6">
         {/* TODO: ボタンはuiに切り出す */}
         <div
           onClick={() => setOpen((prev) => !prev)}
-          className="flex cursor-pointer items-center justify-between rounded-md border border-sub bg-white px-4 py-2 text-sm font-medium text-custom-fontcolor transition-all hover:bg-custom-sub focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          className="flex items-center justify-between rounded-xl border border-sub bg-white px-4 py-1.5 text-sm font-medium text-custom-fontcolor transition-all  focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
         >
-          <MdOutlineFilterAlt className="mr-2 text-lg text-custom-main" />
-          <span>
-            絞り込み {searchData.category} {searchData.date}{" "}
-            {searchData.keyword}
+          <div className="mr-2 flex cursor-pointer items-center justify-between">
+            <MdOutlineFilterAlt className="mr-1 text-xl text-custom-main" />
+            <span>絞り込み</span>
+          </div>
+          <span
+            id="search-condision"
+            className="flex h-7 max-w-filter-mobile flex-row items-center justify-start gap-1 overflow-scroll whitespace-nowrap mobile:max-w-filter-tablet tablet:max-w-filter"
+          >
+            {/* TODO: コンポーネントで管理 */}
+            {Boolean(searchData.category.length) &&
+              searchData.category.map((cate) => (
+                <span
+                  className="rounded-full bg-custom-sub px-3 py-1 text-sm font-normal text-custom-fontcolor"
+                  key={cate}
+                >
+                  {cate}
+                </span>
+              ))}
+            {searchData.date && (
+              <span className="rounded-full bg-custom-sub px-3 py-1 text-sm font-normal text-custom-fontcolor">
+                {format(searchData.date.from, "yyyy年MM月dd日")}
+                {searchData.date?.to &&
+                  ` - ${format(searchData.date.to, "yyyy年MM月dd日")}`}
+              </span>
+            )}
           </span>
         </div>
       </div>
@@ -297,19 +332,19 @@ export const Filter = () => {
                                           <FormControl>
                                             <Checkbox
                                               checked={field.value?.includes(
-                                                eventContent.id
+                                                eventContent.label
                                               )}
                                               onCheckedChange={(checked) => {
                                                 return checked
                                                   ? field.onChange([
                                                       ...field.value,
-                                                      eventContent.id,
+                                                      eventContent.label,
                                                     ])
                                                   : field.onChange(
                                                       field.value?.filter(
                                                         (value) =>
                                                           value !==
-                                                          eventContent.id
+                                                          eventContent.label
                                                       )
                                                     );
                                               }}
@@ -336,18 +371,19 @@ export const Filter = () => {
                                         <FormControl>
                                           <Checkbox
                                             checked={field.value?.includes(
-                                              techContent.id
+                                              techContent.label
                                             )}
                                             onCheckedChange={(checked) => {
                                               return checked
                                                 ? field.onChange([
                                                     ...field.value,
-                                                    techContent.id,
+                                                    techContent.label,
                                                   ])
                                                 : field.onChange(
                                                     field.value?.filter(
                                                       (value) =>
-                                                        value !== techContent.id
+                                                        value !==
+                                                        techContent.label
                                                     )
                                                   );
                                             }}
@@ -375,19 +411,19 @@ export const Filter = () => {
                                           <FormControl>
                                             <Checkbox
                                               checked={field.value?.includes(
-                                                areaContent.id
+                                                areaContent.label
                                               )}
                                               onCheckedChange={(checked) => {
                                                 return checked
                                                   ? field.onChange([
                                                       ...field.value,
-                                                      areaContent.id,
+                                                      areaContent.label,
                                                     ])
                                                   : field.onChange(
                                                       field.value?.filter(
                                                         (value) =>
                                                           value !==
-                                                          areaContent.id
+                                                          areaContent.label
                                                       )
                                                     );
                                               }}
