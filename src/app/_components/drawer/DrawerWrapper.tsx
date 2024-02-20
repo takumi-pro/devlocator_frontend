@@ -1,6 +1,7 @@
 "use client";
 
 import L from "leaflet";
+import { Session } from "next-auth";
 import { useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
 import { useMap } from "react-leaflet";
@@ -17,6 +18,8 @@ type Props = {
   resultReturned: number;
   eventDetail?: Event;
   popup: L.Popup;
+  toggleBookmark: (event: Event, userId: string) => Promise<void>;
+  session: Session | undefined;
 };
 
 /**
@@ -27,6 +30,8 @@ export const DrawerWrapper = ({
   resultReturned,
   eventDetail,
   popup,
+  toggleBookmark,
+  session,
 }: Props) => {
   const [open, setIsOpen] = useState(false);
   const map = useMap();
@@ -92,6 +97,8 @@ export const DrawerWrapper = ({
                           `${event.address} ${event.place}`
                         )
                       }
+                      toggleBookmark={toggleBookmark}
+                      session={session}
                     />
                   ))}
               </Accordion>

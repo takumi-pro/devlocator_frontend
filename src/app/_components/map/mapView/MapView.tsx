@@ -78,6 +78,8 @@ const MapView = ({
         resultReturned={resultReturned}
         eventDetail={eventDetail}
         popup={popup}
+        toggleBookmark={toggleBookmark}
+        session={session}
       />
 
       <TileLayer
