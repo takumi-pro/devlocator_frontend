@@ -18,7 +18,7 @@ import MaekerClusterGroup from "react-leaflet-cluster";
 
 import { Event } from "@/api/events/type";
 
-import { DrawerWrapper, Sidebar } from "../..";
+import { Sidebar } from "../..";
 
 const markerIcon = L.icon({
   iconUrl: icon.src,
@@ -65,15 +65,8 @@ const MapView = ({
       {/****************************
        * サイドバー
        ******************************/}
+      {/* TODO: コンポーネント名変更 - サイドバーだけでなくDrawerもあるため */}
       <Sidebar
-        events={events}
-        resultReturned={resultReturned}
-        eventDetail={eventDetail}
-        popup={popup}
-        toggleBookmark={toggleBookmark}
-        session={session}
-      />
-      <DrawerWrapper
         events={events}
         resultReturned={resultReturned}
         eventDetail={eventDetail}

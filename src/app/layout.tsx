@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className={inter.className}>
+      <body className={`${inter.className} h-screen`}>
         <Header />
         {children}
       </body>

@@ -29,6 +29,7 @@ const config = {
     extend: {
       zIndex: {
         "sidebar-z": "500",
+        "drawer-dialog-z": "1000",
       },
       width: {
         sidebar: "424px",
@@ -38,6 +39,7 @@ const config = {
       },
       height: {
         sidebar: "calc(100vh - 56px)",
+        content: "calc(100vh - 56px)",
         "sidebar-content": "calc(100vh - 56px - 120px)",
       },
       maxWidth: {
@@ -66,6 +68,7 @@ const config = {
         custom: {
           "c-gray-200": "#f1f5f9",
           "c-gray-500": "#d6e3ed",
+          "sky-blue": "rgb(248 250 252);",
           "hover-white": "#f5fbff",
           sub: "#eee",
           "hover-sub": "#cfcfcf",

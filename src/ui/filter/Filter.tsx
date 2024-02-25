@@ -183,6 +183,11 @@ export const Filter = () => {
                   ` - ${format(searchData.date.to, "yyyy年MM月dd日")}`}
               </span>
             )}
+            {searchData.keyword && (
+              <span className="rounded-full bg-custom-sub px-3 py-1 text-sm font-normal text-custom-fontcolor">
+                {searchData.keyword}
+              </span>
+            )}
           </span>
         </div>
       </div>

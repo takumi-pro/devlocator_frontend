@@ -12,7 +12,7 @@ type Props = {
 const Home = async ({ searchParams }: Props) => {
   const eventData = await fetchEvents(searchParams);
   return (
-    <main className="relative">
+    <main className="relative h-content">
       <EventContainer eventData={eventData} />
     </main>
   );

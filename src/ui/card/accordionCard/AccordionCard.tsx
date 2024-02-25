@@ -106,14 +106,7 @@ export const AccordionCard = ({
       accordionContainerRef?.current &&
       eventDetail.eventId === event.eventId
     ) {
-      console.log("eventDetail", eventDetail.eventId);
-      console.log("event", event.eventId);
-      console.log("cardRef.current.offsetTop", cardRef.current.offsetTop);
       const topMargin = 96;
-      console.log(
-        "cardRef.current.offsetTop - topMargin",
-        cardRef.current.offsetTop - topMargin
-      );
       accordionContainerRef.current.scrollTop =
         cardRef.current.offsetTop - topMargin;
     }

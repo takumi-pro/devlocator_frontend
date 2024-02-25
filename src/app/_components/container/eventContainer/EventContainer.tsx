@@ -28,14 +28,6 @@ export const EventContainer = async ({ eventData }: Props) => {
     }
   };
 
-  // const isBookmarked = async (eventId: number) => {
-  //   "use server";
-  //   const bookmarkedEvent = await prisma.bookmarked_events.findFirst({
-  //     where: { event_id: eventId },
-  //   });
-  //   return Boolean(bookmarkedEvent);
-  // };
-
   return (
     <>
       <Map

@@ -15,7 +15,11 @@ type Props = {
 export const SigninDialog = ({ open, setOpen, text }: Props) => {
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>
+      <Dialog
+        as="div"
+        className="relative z-drawer-dialog-z"
+        onClose={() => setOpen(false)}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
