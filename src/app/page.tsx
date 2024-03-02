@@ -1,9 +1,18 @@
+import { Metadata } from "next";
+
 import { fetchEvents } from "@/api/events/events";
 
 import { EventContainer } from "./_components/container/eventContainer/EventContainer";
+import Favicon from "./favicon.ico";
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export const metadata: Metadata = {
+  title: "DevLocator",
+  description: "エンジニアイベントを地図上で検索できるサービス",
+  icons: [{ rel: "icon", url: Favicon.src }],
 };
 
 /**
