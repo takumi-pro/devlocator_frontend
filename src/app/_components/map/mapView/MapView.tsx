@@ -1,7 +1,6 @@
 "use client";
 
 import L from "leaflet";
-import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import { Session } from "next-auth";
@@ -20,9 +19,32 @@ import { Event } from "@/api/events/type";
 
 import { Sidebar } from "../..";
 
+// TODO: 別ファイルで管理
+const ICON_SIZE = {
+  WIDTH: 40,
+  HEIGHT: 40,
+};
+const SHADOW_ANCHOR = {
+  X: 14,
+  Y: 40,
+};
+const ICON_ANCHOR = {
+  X: 20,
+  Y: 40,
+};
+const POPUP_ANCHOR = {
+  X: 0,
+  Y: -40,
+};
+
 const markerIcon = L.icon({
-  iconUrl: icon.src,
+  iconUrl: "/icon_blue_1.svg",
+  iconSize: [ICON_SIZE.WIDTH, ICON_SIZE.HEIGHT],
   shadowUrl: iconShadow.src,
+  // TODO: マジックナンバー修正
+  iconAnchor: [ICON_ANCHOR.X, ICON_ANCHOR.Y],
+  shadowAnchor: [SHADOW_ANCHOR.X, SHADOW_ANCHOR.Y],
+  popupAnchor: [POPUP_ANCHOR.X, POPUP_ANCHOR.Y],
 });
 
 const popup = L.popup();
