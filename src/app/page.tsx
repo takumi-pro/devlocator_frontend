@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://devlocator.vercel.app"),
+  metadataBase: new URL("https://devlocator-frontend.vercel.app"),
   title: "DevLocator",
   description: "エンジニアイベントを地図上で検索できるサービス",
   icons: [{ rel: "icon", url: Favicon.src }],
