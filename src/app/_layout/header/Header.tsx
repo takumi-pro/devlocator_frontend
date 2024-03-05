@@ -18,7 +18,7 @@ export const Header = async () => {
           <Image width={120} height={45} src="logo.svg" alt="" />
         </Link>
         <div className="flex items-center">
-          {session?.user ? <Dropdown /> : <SigninButton />}
+          {session?.user ? <Dropdown session={session} /> : <SigninButton />}
         </div>
       </div>
     </header>

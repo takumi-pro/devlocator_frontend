@@ -1,16 +1,22 @@
 "use client";
 
 import { Menu, Transition } from "@headlessui/react";
+import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { Fragment } from "react";
 import { TbLogout } from "react-icons/tb";
 
+type Props = {
+  session: Session;
+};
+
 // TODO: dropdownはuiに切り出す
 /**
  * ドロップダウン
  */
-const Dropdown = () => {
+const Dropdown = ({ session }: Props) => {
+  const imageSrc = session.user.image ?? "";
   return (
     <Menu as={"div"} className="relative z-sidebar-z inline-block text-left">
       <div>
@@ -19,8 +25,8 @@ const Dropdown = () => {
             width={38}
             height={38}
             className="relative inline-block cursor-pointer rounded-full border border-sub"
-            src="https://lh3.googleusercontent.com/a/ACg8ocLj4MRoxfwGqdoY-NrCs3JUyWyl2QfXfz6s-Bj7W6ZxJw=s96-c"
-            alt=""
+            src={imageSrc}
+            alt="your google image"
           />
         </Menu.Button>
       </div>
